@@ -65,5 +65,6 @@ _Menciona a todos aquellos que ayudaron a levantar el proyecto desde sus inicios
 -   **Renzo Siza Tejada** - _Programador_
 -   **Jesus Ortiz Chavez** - _Programador_ 
 -   **Gary Farid Nuñez** - _Programador_
+-   **Ruben Edwin Hualla** - _Programador_
 
 
