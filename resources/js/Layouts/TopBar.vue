@@ -2,7 +2,7 @@
     <header id="page-topbar">
         <b-navbar toggleable="lg" type="light" variant="light">
             <b-navbar-brand href="#">
-                POSGRADO
+                PENSIONES-POSGRADO
             </b-navbar-brand>
 
             <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
@@ -21,34 +21,19 @@
                 </inertia-link>
                 <inertia-link :href="route('tickets.formulario')" v-if="$permissions.can([{ name: 'Registrar Uniformes' }])">
                   <b-nav-item :href="route('tickets.formulario')" :class="{ active: path == 'tickets' }">
-                    Tickets
+                    Dashboard
                   </b-nav-item>
                 </inertia-link>
-                <inertia-link :href="route('uniformes.listarMisTickets')" v-if="$permissions.can([{ name: 'Ver-Propios Tickets' }])">
-                  <b-nav-item :href="route('uniformes.listarMisTickets')" :class="{ active: path == 'tickets-atendidos' }">
-                    Tickets atendidos
+                <inertia-link :href="route('asistencias')" v-if="$permissions.can([{ name: 'Ver-Propios Tickets' }])">
+                  <b-nav-item :href="route('asistencias')" :class="{ active: path == 'asistencias' }">
+                    Asistencias
                   </b-nav-item>
                 </inertia-link>
                 <inertia-link :href="route('uniformes.iniciar')" v-if="$permissions.can([{ name: 'Ver-Reporte Tickets' }])">
                   <b-nav-item :href="route('uniformes.iniciar')" :class="{ active: path == 'tickets-reporte' }">
-                    Reporte
+                    Reportes
                   </b-nav-item>
                 </inertia-link>
-                <!-- <inertia-link :href="route('mis-denuncias.listar')" v-if="$permissions.can([{ name: 'Ver-Propias Denuncias' }])">
-                  <b-nav-item :href="route('mis-denuncias.listar')" :class="{ active: path == 'mis-denuncias' }">
-                    Mis denuncias
-                  </b-nav-item>
-                </inertia-link>
-                <inertia-link :href="route('recibidas')" v-if="$permissions.can([{ name: 'Ver-Recibidas Denuncias' }])">
-                  <b-nav-item :href="route('recibidas')" :class="{ active: path == 'recibidas' }">
-                    Recibidas
-                  </b-nav-item>
-                </inertia-link>
-                <inertia-link :href="route('atendidas')" v-if="$permissions.can([{ name: 'Ver-Atendidas Denuncias' }])">
-                  <b-nav-item :href="route('atendidas')" :class="{ active: path == 'atendidas' }">
-                    Atendidas
-                  </b-nav-item>
-                </inertia-link> -->
             </b-navbar-nav>
 
             <!-- Right aligned nav items -->

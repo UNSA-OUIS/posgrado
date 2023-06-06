@@ -12,6 +12,7 @@ use App\Http\Controllers\UniformeController;
 use App\Http\Controllers\TicketController;
 use App\Http\Controllers\LoginWithGoogleController;
 use App\Http\Controllers\DenunciaController;
+use App\Http\Controllers\AsistenciaController;
 use App\Http\Controllers\Pdf;
 use App\Models\Denuncia;
 use Illuminate\Support\Facades\Auth;
@@ -116,6 +117,8 @@ Route::group(["middleware" => ['auth:sanctum', 'verified']], function () {
     Route::get('/tickets-reporte/listar', [TicketController::class, 'index'])->name('tickets.listar');
     Route::get('/tickets-reporte/export', [TicketController::class, 'exportTickets'])->name('tickets.exportTickets');
 
+    // PENSIONES POSGRADO
+    Route::get('/asistencias', [AsistenciaController::class, 'vista'])->name('asistencias');
 });
 
 Route::get('/google', [LoginWithGoogleController::class, 'redirectToGoogle'])->name('google');;
