@@ -8,25 +8,41 @@
                     label-for="programa"
                 >
                     <v-select
-                        label="name"
+                        label="programa"
                         id="programa"
-                        :options="programas"
-                        v-model="form.programa_id"
-                        :reduce="programa => programa.nues"
+                        :options="data_pensiones"
+                        v-model="program_selected"
                         placeholder="Búsqueda por nombre del programa de estudios"
                     ></v-select>
                 </b-form-group>
 
                 <b-form-group
                     id="input-group-2"
+                    label="Especialidad:"
+                    label-for="especialidad"
+                    v-if="program_selected"
+                >
+                    <v-select
+                        label="especialidad"
+                        id="especialidad"
+                        :options="program_selected.data_espes"
+                        v-model="especialidad_selected"
+                        placeholder="Búsqueda por nombre de la especialidad"
+                    ></v-select>
+                </b-form-group>
+
+                <b-form-group
+                    id="input-group-3"
                     label="Año de Ingreso:"
-                    label-for="input-2"
+                    label-for="anho"
+                    v-if="especialidad_selected"
                 >
                     <b-form-select
-                        id="input-2"
-                        v-model="form.anio"
-                        :options="anios"
-                        :disabled="!form.programa_id"
+                        id="anho"
+                        v-model="pensiones_monto"
+                        :options="especialidad_selected.data_anhos"
+                        text-field="anho"
+                        value-field="pensiones_monto"
                         required
                     >
                         <template #first>
@@ -39,23 +55,26 @@
                 </b-form-group>
 
                 <b-form-group
-                    id="input-group-3"
+                    id="input-group-4"
                     label="Pension:"
-                    label-for="input-3"
+                    label-for="pension"
+                    v-if="pensiones_monto"
                 >
                     <b-form-select
-                        id="input-3"
+                        id="pension"
                         v-model="form.pension"
-                        :options="pensiones"
-                        :disabled="!form.programa_id"
+                        @change="pensionNumberChanged"
                         required
                     >
-                        <template #first>
-                            <b-form-select-option :value="null" disabled
-                                >-- Porfavor seleccione una opcion
-                                --</b-form-select-option
-                            >
-                        </template>
+                        <option :value="null" disabled
+                            >-- Porfavor seleccione una opcion --</option
+                        >
+                        <option
+                            v-for="option in pensiones_monto"
+                            :value="option"
+                        >
+                            {{ option.cant_pens }}
+                        </option>
                     </b-form-select>
                 </b-form-group>
             </div>
@@ -87,9 +106,11 @@
 
 <script>
 import AppLayout from "@/Layouts/AppLayout";
+import { loadPosgradoStudents } from "@/Api/loadStudents";
 
 export default {
     name: "asistencias",
+    props: ["data_pensiones"],
     components: {
         AppLayout
     },
@@ -102,8 +123,6 @@ export default {
                 },
                 { nues: 202, name: "Maestria en Ciencias de la Computacion" }
             ],
-            anios: [2020, 2021, 2022, 2023, 2024],
-            pensiones: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
             estudiantes: [
                 {
                     cui: 20141025,
@@ -118,6 +137,9 @@ export default {
                     asistencia: false
                 }
             ],
+            program_selected: null,
+            especialidad_selected: null,
+            pensiones_monto: null,
             form: {
                 programa_id: null,
                 anio: null,
@@ -128,6 +150,16 @@ export default {
         };
     },
     methods: {
+        pensionNumberChanged(programa_pension) {
+            if (!programa_pension) return;
+            console.log(
+                loadPosgradoStudents(
+                    programa_pension.anho,
+                    programa_pension.nues,
+                    programa_pension.espe
+                )
+            );
+        },
         save() {
             this.saving = true;
             console.log("Guardando datos...");

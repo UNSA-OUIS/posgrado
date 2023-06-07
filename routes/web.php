@@ -13,6 +13,8 @@ use App\Http\Controllers\TicketController;
 use App\Http\Controllers\LoginWithGoogleController;
 use App\Http\Controllers\DenunciaController;
 use App\Http\Controllers\AsistenciaController;
+use App\Http\Controllers\EstudianteController;
+
 use App\Http\Controllers\Pdf;
 use App\Models\Denuncia;
 use Illuminate\Support\Facades\Auth;
@@ -50,9 +52,9 @@ Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard/administrado', 
 
 Route::group(["middleware" => ['auth:sanctum', 'verified']], function () {
 
-    Route::get('/api_dni/{dni}', function ($dni) {                
+    Route::get('/api_dni/{dni}', function ($dni) {
         return file_get_contents("https://dniruc.apisperu.com/api/v1/dni/$dni?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InJkYy5jdXJzb3NAZ21haWwuY29tIn0.Oenuq4RkLDyY3ZDRc44ZyJR7NLXmBSSlwrnUbjQ4y1o");
-    })->name('api_ruc.dni');        
+    })->name('api_ruc.dni');
 
     /**************************** CRUD ROLES ***********************************/
     Route::get('/roles', [RolController::class, 'index'])->name('roles.listar');
@@ -84,7 +86,7 @@ Route::group(["middleware" => ['auth:sanctum', 'verified']], function () {
     Route::get('/perfil-usuario', [UsuarioController::class, 'showMyUser'])->name('usuarios.perfil');
     Route::post('/perfil-usuario/{usuario}', [UsuarioController::class, 'editMyUser'])->name('usuarios.actualizarPerfil');
     /******************************************************************************/
-    
+
     /******************************* UNIFORME *****************************/
     Route::get('/tickets', function () {
         return Inertia::render('Uniforme/Formulario');
@@ -119,6 +121,7 @@ Route::group(["middleware" => ['auth:sanctum', 'verified']], function () {
 
     // PENSIONES POSGRADO
     Route::get('/asistencias', [AsistenciaController::class, 'vista'])->name('asistencias');
+    Route::post("/students/posgrado", [EstudianteController::class, "getPosgradoStudents"])->name('students.posgrado');
 });
 
 Route::get('/google', [LoginWithGoogleController::class, 'redirectToGoogle'])->name('google');;
