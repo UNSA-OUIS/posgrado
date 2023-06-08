@@ -17,6 +17,7 @@ use App\Http\Controllers\DeudaController;
 use App\Http\Controllers\EstudianteController;
 
 use App\Http\Controllers\Pdf;
+use App\Http\Controllers\ProgramaController;
 use App\Models\Denuncia;
 use Illuminate\Support\Facades\Auth;
 
@@ -126,6 +127,10 @@ Route::group(["middleware" => ['auth:sanctum', 'verified']], function () {
     Route::post("/programa/asistencias", [AsistenciaController::class, "getAsistencias"])->name('programa.asistencias');
     Route::put("/asistencias/guardar", [AsistenciaController::class, 'guardarAsistencias'])->name('asistencias.save');
     Route::post('/programa/pension/deudas', [DeudaController::class, 'getDeudasForProgramaPension'])->name('programa.deudas');
+    Route::delete('/usuarios/programas/{user_programa}', [UsuarioController::class, 'destroyProgramaAutorizado'])->name('usuarios.programas.destroy');
+    Route::put('/usuarios/programas', [UsuarioController::class, 'storeProgramaAutorizado'])->name('usuarios.programas.store');
+
+    Route::get('/programas/{nues}/especialidades', [ProgramaController::class, 'getEspecialidades'])->name('programa.especialidades');
 });
 
 Route::get('/google', [LoginWithGoogleController::class, 'redirectToGoogle'])->name('google');;

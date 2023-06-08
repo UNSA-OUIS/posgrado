@@ -1,6 +1,9 @@
 <template>
     <app-layout>
         <div class="card row align-items-center">
+            <b-alert v-model="showSuccessAlert" variant="success" dismissible>
+                Exito guardando!
+            </b-alert>
             <div class="card-body col-10">
                 <b-form-group
                     id="input-group-1"
@@ -75,23 +78,52 @@
                             :value="i + 1"
                             :key="i"
                         >
-                            {{ i + 1 }}
+                            Pensión {{ i + 1 }}
                         </option>
                     </b-form-select>
                 </b-form-group>
             </div>
-            <b-spinner label="loading" v-show="loading"></b-spinner>
+
+            <b-col lg="6" class="my-1" v-if="!loading && matriculados.length">
+                <b-form-group
+                    label="Buscar"
+                    label-for="filter-input"
+                    label-cols-sm="3"
+                    label-align-sm="right"
+                    label-size="sm"
+                    class="mb-0"
+                >
+                    <b-input-group size="sm">
+                        <b-form-input
+                            id="filter-input"
+                            v-model="filter"
+                            type="search"
+                            placeholder="Escribe para buscar"
+                        ></b-form-input>
+
+                        <b-input-group-append>
+                            <b-button :disabled="!filter" @click="filter = ''"
+                                >Limpiar</b-button
+                            >
+                        </b-input-group-append>
+                    </b-input-group>
+                </b-form-group>
+            </b-col>
+
             <b-table
                 striped
                 hover
                 outlined
                 head-variant="dark"
+                table-variant="secondary"
                 class="mt-5 col-10"
                 :items="matriculados"
                 :fields="fields"
-                v-if="!loading && matriculados.length"
+                v-if="matriculados.length"
+                :busy="loading"
+                :filter="filter"
             >
-                <template #cell(index)="data">
+                <template #cell(#)="data">
                     {{ data.index + 1 }}
                 </template>
                 <template #cell(estado)="data">
@@ -153,8 +185,9 @@ export default {
             pension: null,
             matriculados: [],
             asistencias: [],
+            filter: "",
             fields: [
-                { key: "index" },
+                { key: "#" },
                 {
                     key: "cui",
                     sortable: true
@@ -173,7 +206,10 @@ export default {
                 }
             ],
             loading: false,
-            saving: false
+            saving: false,
+            showSuccessAlert: false
+            //totalRows: 1,
+            //currentPage: 1,
         };
     },
     watch: {
@@ -293,9 +329,13 @@ export default {
                     matriculados: this.matriculados
                 });
 
+                this.showSuccessAlert = true;
                 return response.data;
             } catch (error) {
                 console.log(error);
+                alert(
+                    "Ha ocurrido un error guardando los datos de asistencias. Vuelva a intentarlo o comuniquese con soporte"
+                );
                 return null;
             } finally {
                 this.saving = false;
@@ -316,6 +356,11 @@ export default {
                 return null;
             }
         }
+        /*onFiltered(filteredItems) {
+            // Trigger pagination to update the number of buttons/pages due to filtering
+            this.totalRows = filteredItems.length;
+            this.currentPage = 1;
+        }*/
     }
 };
 </script>

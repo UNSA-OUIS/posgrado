@@ -64,7 +64,8 @@ class Programa extends Model
      */
     public function especialidades(): HasMany
     {
-        return $this->hasMany(Especialidad::class, 'nues', 'nues');
+        return $this->hasMany(Especialidad::class, 'nues', 'nues')
+            ->whereRaw('actespe.plan = (select max(plan) from actespe where nues = ?)', [$this->nues]);
     }
 
     /*public function facultad()

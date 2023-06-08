@@ -9,7 +9,7 @@ class Especialidad extends Model
 {
     protected $connection = 'mysql2';
     protected $table = 'actespe';
-    //protected $primaryKey = '';
+    protected $primaryKey = 'nues';
     public $incrementing = false;
     //protected $keyType = 'string';
     public $timestamps = false;
