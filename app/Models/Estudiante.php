@@ -4,10 +4,10 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Matricula extends Model
+class Estudiante extends Model
 {
     protected $connection = "mysql2";
-    protected $table = 'acdidal';
+    protected $table = 'acdiden';
     protected $primaryKey = 'cui';
     public $incrementing = false;
     protected $keyType = 'string';
@@ -33,9 +33,4 @@ class Matricula extends Model
     {        
         return $this->hasMany(ProcesoEscuela::class, 'nues', 'nues');
     }*/
-
-    public function estudiante()
-    {
-        return $this->belongsTo(Estudiante::class, 'cui', 'cui');
-    }
 }

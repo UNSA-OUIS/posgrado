@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Asistencia;
 use App\Models\ProgramaPension;
 use App\Models\UserPrograma;
 use Illuminate\Http\Request;
@@ -33,7 +34,9 @@ class AsistenciaController extends Controller
             $pensiones_por_espe = collect($list)->groupBy('espe')->toArray();
 
             $pensiones_por_anho = array_map(function ($list2) {
-                return collect($list2)->groupBy('anho');
+                return collect($list2)->groupBy('anho')->map(function ($value, $key) {
+                    return $value->first();
+                })->values();
             }, $pensiones_por_espe);
 
             return $pensiones_por_anho;
@@ -44,11 +47,8 @@ class AsistenciaController extends Controller
             $data_espes = [];
             foreach ($espes as $espe => $anhos) {
                 $data_anhos = [];
-                foreach ($anhos as $anho => $pensiones_monto) {
-                    $data_anhos[] = [
-                        'anho' => $anho,
-                        'pensiones_monto' => $pensiones_monto
-                    ];
+                foreach ($anhos as $anho => $monto_pension) {
+                    $data_anhos[] = $monto_pension;
                 }
 
                 $programa_aut = $programas_autorizados->where('nues', $nues)->where('espe', $espe)->first();
@@ -79,5 +79,51 @@ class AsistenciaController extends Controller
             ->get();*/
 
         return Inertia::render('Asistencias/Form', compact('data_pensiones'));
+    }
+
+    public function getAsistencias(Request $request)
+    {
+        $request->validate([
+            'anho' => 'required|numeric|digits:4',
+            'nues' => 'required|string',
+            'espe' => 'nullable|string',
+        ]);
+
+        $asistencias = Asistencia::where('anho', $request->anho)
+            ->where('nues', $request->nues)
+            ->where('espe', $request->espe)
+            ->select('id', 'cui', 'pension_asistio')
+            ->get();
+
+        return $asistencias;
+    }
+
+    public function guardarAsistencias(Request $request)
+    {
+        $request->validate([
+            'matriculados' => 'array|required',
+            'matriculados.*.nues' => 'required|string',
+            'matriculados.*.espe' => 'nullable|string',
+            'matriculados.*.cui' => 'required|string',
+            'matriculados.*.asistencias' => 'required|array',
+            'anho' => 'required|numeric|digits:4'
+        ]);
+
+        foreach ($request->matriculados as $m) {
+            $asistencia = Asistencia::updateOrCreate(
+                [
+                    'anho' => $request->anho,
+                    'nues' => $m['nues'],
+                    'espe' => $m['espe'],
+                    'cui' => $m['cui']
+                ],
+                ['pension_asistio' => $m['asistencias']]
+            );
+        }
+
+        return response()->json([
+            'error' => false,
+            'message' => 'OK'
+        ]);
     }
 }

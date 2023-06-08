@@ -13,6 +13,7 @@ use App\Http\Controllers\TicketController;
 use App\Http\Controllers\LoginWithGoogleController;
 use App\Http\Controllers\DenunciaController;
 use App\Http\Controllers\AsistenciaController;
+use App\Http\Controllers\DeudaController;
 use App\Http\Controllers\EstudianteController;
 
 use App\Http\Controllers\Pdf;
@@ -122,6 +123,9 @@ Route::group(["middleware" => ['auth:sanctum', 'verified']], function () {
     // PENSIONES POSGRADO
     Route::get('/asistencias', [AsistenciaController::class, 'vista'])->name('asistencias');
     Route::post("/students/posgrado", [EstudianteController::class, "getPosgradoStudents"])->name('students.posgrado');
+    Route::post("/programa/asistencias", [AsistenciaController::class, "getAsistencias"])->name('programa.asistencias');
+    Route::put("/asistencias/guardar", [AsistenciaController::class, 'guardarAsistencias'])->name('asistencias.save');
+    Route::post('/programa/pension/deudas', [DeudaController::class, 'getDeudasForProgramaPension'])->name('programa.deudas');
 });
 
 Route::get('/google', [LoginWithGoogleController::class, 'redirectToGoogle'])->name('google');;

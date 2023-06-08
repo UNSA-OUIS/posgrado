@@ -1,8 +1,8 @@
 import axios from "axios";
 
-export async function loadPosgradoStudents(anho, nues, espe) {
+export async function loadAsistencias(anho, nues, espe) {
     try {
-        let response = await axios.post(route("students.posgrado"), {
+        let response = await axios.post(route("programa.asistencias"), {
             anho,
             nues,
             espe
